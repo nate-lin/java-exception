@@ -10,7 +10,7 @@ import java.util.Objects;
  * @Gitee https://gitee.com/nate-lin
  */
 /*
-    Object类中的静态方法
+    Objects类中的静态方法
     public static <T> T requireNonNull(T obj)`:查看指定引用对象不是null.
     源码：
         public static <T> T requireNonNull(T obj){
@@ -30,7 +30,8 @@ public class Demo04Object {
         if(obj==null){
             throw new NullPointerException("传递的对象是null")
         }*/
-        //Objects.requireNonNull(obj);
+
+         //Objects.requireNonNull(obj);
          Objects.requireNonNull(obj,"传递的对象是null");
     }
 
