@@ -1,4 +1,6 @@
-# Java-异常的处理
+
+
+## Java-异常的处理
 
 - Java异常处理的五个关键字：**try、catch、finally、throw、throws**
 
@@ -292,16 +294,16 @@ public class Demo05Throws {
        FailedLoginException 是编译异常，抛出了编译异常，就必须处理这个异常
        可以使用throws继续声明抛出FailedLoginException这个异常对象，让方法的调用者处理
      */
-    private static void readFile(String fileName) throws FailedLoginException ,IOException{
+    public static void readFile(String fileName) throws FailedLoginException ,IOException{
 
-        if (!fileName.equals("c:\\a.txt")){
+        if (!fileName.equals("d:\\a.txt")){
             throw new FailedLoginException("传递的文件路径不是c:\\a.txt");
         }
         /*
             如果传递的路径不是txt结尾
             那么我们就抛出IO异常对象，告知方法的调用者，文件的后缀名不对
          */
-        if (!fileName.equals(".txt")){
+        if (!fileName.endsWith(".txt")){
             throw new IOException("文件的后缀名不对");
         }
 
@@ -313,7 +315,297 @@ public class Demo05Throws {
 
 运行效果图
 
-![image-20201214184917621](http://blog-lin1.oss-cn-shenzhen.aliyuncs.com/img/image-20201214184917621.png)
+![image-20201214202034961](http://blog-lin1.oss-cn-shenzhen.aliyuncs.com/img/image-20201214202034961.png)
+
+### 1.4、捕获异常try...catch
+
+> - try中可能会抛出多个异常对象，那么就可以使用多个catch来处理这些异常对象
+> - 如果try中产生了异常，那么就会执行catch中异常处理逻辑，执行完try的代码，继续执行try...catch之后的代码
+
+try...catch的代码演示：
+
+```java
+package com.itheima.demo02.Exception;
+
+import javax.security.auth.login.FailedLoginException;
+import java.io.IOException;
+import java.util.Arrays;
+
+/**
+ * @date Created by 林春燕 on 2020/12/14 19:42
+ * @微信公众号 浅悦的编程时光
+ * @博客 https://nate-lin.gitee.io
+ * @GitHub https://github.com/nate-lin
+ * @Gitee https://gitee.com/nate-lin
+ */
+/*
+    try...catch:异常处理的第二种方式，自己处理异常
+    格式：
+        try{
+            可能产生异常的代码
+        }catch(){
+            异常的处理逻辑，异常对象之后，怎么处理异常对象
+            一般在工作中，会把异常的信息记录到一个日志中
+        }
+        ...
+        catch(异常类名 变量名){
+
+        }
+     注意：
+        1.try中可能会抛出多个异常对象，那么就可以使用多个catch来处理这些异常对象
+        2.如果try中产生了异常，那么就会执行catch中异常处理逻辑，执行完try的代码，继续执行try...catch之后的代码
+ */
+public class Demo01TryCatch {
+    public static void main(String[] args) {
+        try {
+            //可能产生异常的代码
+            readFile("d:\\a.txt");
+        //try中抛出什么异常对象，catch就定义什么异常变量，用来接收这个异常对象
+        }catch (IOException e){
+        //异常的处理逻辑，异常对象之后，怎么处理异常对象
+            System.out.println("catch-传递的文件后缀不是.txt");
+        }
+        System.out.println("后续代码");
+    }
+
+    /*
+        如果传递的路径不是txt结尾
+        那么我们就抛出IO异常对象，告知方法的调用者，文件的后缀名不对
+     */
+    public static void readFile(String fileName) throws IOException{
+
+        if (!fileName.endsWith(".txt")){
+        throw new IOException("文件的后缀名不对");
+    }
+        System.out.println("路径没有问题，读取文件");
+    }
+}
+
+```
+
+运行效果图
+
+![image-20201214202150771](http://blog-lin1.oss-cn-shenzhen.aliyuncs.com/img/image-20201214202150771.png)
 
 
 
+### 1.5、Throwable
+
+如何获取异常信息：
+
+Throwable类中定义了一些查看方法：
+
+- `public String getMessage()`:获取异常的描述信息，原因（提示给用户的时候，就提示错误原因）
+- `public String toString()`:获取异常的类型和描述信息（不用）
+- `public void printStackTrace()`:打印异常的跟踪栈信息并输出到控制台。
+
+包含了异常的类型，异常的原因还包括异常出现的位置，在开发和调试阶段都得使用printStackTrace。在开发中呢，也是可以在catch将编译期异常转换运行期异常处理
+
+多个异常使用捕获又该如何处理呢？
+
+- 1.多个异常分别处理
+
+- 2.多个异常一次捕获一次处理
+
+- 3.多个异常一次捕获，多次处理
+
+代码如下：
+
+```java
+package com.itheima.demo02.Exception;
+
+import javax.security.auth.login.FailedLoginException;
+import java.io.IOException;
+import java.sql.SQLOutput;
+import java.util.Arrays;
+
+/**
+ * @date Created by 林春燕 on 2020/12/14 19:42
+ * @微信公众号 浅悦的编程时光
+ * @博客 https://nate-lin.gitee.io
+ * @GitHub https://github.com/nate-lin
+ * @Gitee https://gitee.com/nate-lin
+ */
+/*
+    try...catch:异常处理的第二种方式，自己处理异常
+    格式：
+        try{
+            可能产生异常的代码
+        }catch(){
+            异常的处理逻辑，异常对象之后，怎么处理异常对象
+            一般在工作中，会把异常的信息记录到一个日志中
+        }
+        ...
+        catch(异常类名 变量名){
+
+        }
+     注意：
+        1.try中可能会抛出多个异常对象，那么就可以使用多个catch来处理这些异常对象
+        2.如果try中产生了异常，那么就会执行catch中异常处理逻辑，执行完try的代码，继续执行try...catch之后的代码
+ */
+public class Demo01TryCatch {
+    public static void main(String[] args) {
+        try {
+            //可能产生异常的代码
+            readFile("d:\\a.tx");
+        //try中抛出什么异常对象，catch就定义什么异常变量，用来接收这个异常对象
+        }catch (IOException e){
+        //异常的处理逻辑，异常对象之后，怎么处理异常对象
+            // System.out.println("catch-传递的文件后缀不是.txt");
+        /*
+            Throwable类中定义了3个异常处理的方法
+                String getMessage() 返回此throwable的简短描述
+                String toString() 返回此throwable的详细消息字符串
+                void printStackTrace() JVM打印异常对象，默认此方法，打印的异常信息是最全面的
+        */
+            System.out.println(e.getMessage());//文件的后缀名不对
+            System.out.println(e.toString());//java.io.IOException: 文件的后缀名不对
+            System.out.println(e);//java.io.IOException: 文件的后缀名不对
+
+            /*
+                java.io.IOException: 文件的后缀名不对
+            	at com.itheima.demo02.Exception.Demo01TryCatch.readFile(Demo01TryCatch.java:62)
+            	at com.itheima.demo02.Exception.Demo01TryCatch.main(Demo01TryCatch.java:36)
+             */
+            e.printStackTrace();
+        }
+        System.out.println("后续代码");
+    }
+
+    /*
+        如果传递的路径不是txt结尾
+        那么我们就抛出IO异常对象，告知方法的调用者，文件的后缀名不对
+     */
+    public static void readFile(String fileName) throws IOException{
+
+        if (!fileName.endsWith(".txt")){
+        throw new IOException("文件的后缀名不对");
+    }
+        System.out.println("路径没有问题，读取文件");
+    }
+}
+
+```
+
+运行效果图
+
+![image-20201214205639479](http://blog-lin1.oss-cn-shenzhen.aliyuncs.com/img/image-20201214205639479.png)
+
+
+
+### 1.6、finally代码块
+
+**finally**：有一些特定的代码无论异常是否发生，都需要执行。另外，因为异常会引发程序跳转，导致有些语句执行不到。而finally代码块中存放的代码都是一定会执行的。
+
+什么时候的代码必须最终执行？
+
+当我们在try语句中打开了一些物理资源（磁盘文件/网络连接/数据库连接等），我们都得在使用完之后，最终关闭打开的资源。
+
+finally的语法：
+
+try...catch...finally:自身需要处理异常，最终还得关闭资源。
+
+> 注意：finally不能单独使用
+
+比如在我们之后学习的IO流中，当打开了一个关联文件的资源，最后程序不管结果如何，都需要把这个资源关闭掉
+
+finally代码参考如下：
+
+```java
+package com.itheima.demo02.Exception;
+
+import java.io.IOException;
+import java.util.Arrays;
+
+/**
+ * @date Created by 林春燕 on 2020/12/14 21:09
+ * @微信公众号 浅悦的编程时光
+ * @博客 https://nate-lin.gitee.io
+ * @GitHub https://github.com/nate-lin
+ * @Gitee https://gitee.com/nate-lin
+ */
+
+/*
+    finally代码块
+    格式：
+        try{
+            可能产生异常的代码
+        }catch(){
+            异常的处理逻辑，异常对象之后，怎么处理异常对象
+            一般在工作中，会把异常的信息记录到一个日志中
+        }
+        ...
+        catch(异常类名 变量名){
+
+        }finally{
+            无论是否出现异常都会执行
+        }
+       注意：
+        1.finally不能单独使用，必须和try一起使用
+        2.finally一般用于资源释放（资源回收），无论程序是否出现异常，最后都要资源释放（IO）
+ */
+public class Demo02TryCatchFinally {
+    public static void main(String[] args) {
+        try {
+            //可能会产生异常的代码
+            readFile("c:\\a.tx");
+        } catch (IOException e) {
+            //异常的处理逻辑
+            e.printStackTrace();
+        }finally {
+            //无论是否出现异常，都会执行
+            System.out.println("资源释放");
+        }
+    }
+    /*
+           如果传递的路径不是txt结尾
+           那么我们就抛出IO异常对象，告知方法的调用者，文件的后缀名不对
+        */
+    public static void readFile(String fileName) throws IOException {
+
+        if (!fileName.endsWith(".txt")){
+            throw new IOException("文件的后缀名不对");
+        }
+        System.out.println("路径没有问题，读取文件");
+    }
+}
+
+```
+
+运行效果图
+
+![image-20201214211821401](http://blog-lin1.oss-cn-shenzhen.aliyuncs.com/img/image-20201214211821401.png)
+
+
+
+### 1.7、异常注意事项
+
+- 多个异常使用捕获又该如何处理呢？
+
+  - 1.多个异常分别处理
+
+  - 2.多个异常一次捕获一次处理
+
+  - 3.多个异常一次捕获，多次处理
+
+一般我们是使用一次捕获多次处理方式，格式如下：
+
+```java
+try{
+    编写可能会出现异常的代码
+}catch(异常类型A e){	当try中出现A类异常，就用该catch来捕获。
+    处理异常的代码
+    //记录日志/打印异常信息/继续抛出异常
+}catch(异常类型B e){	当try中出现B类异常，就用该catch来捕获。
+    处理异常的代码
+    //记录日志/打印异常信息/继续抛出异常
+}
+```
+
+> 注意：这种异常处理方式，要求多个catch中的异常不能相同，并且若catch中的多个异常之间有子父类异常的关系，那么子类异常要求在上面的catch处理，父类异常在下面的catch处理。
+
+- 运行时异常被抛出可以不处理。即不捕获也不声明抛出。
+- 如果父类抛出了多个异常，子类覆盖父类方法时，只能抛出相同的异常或者是他的子集。
+- 父类方法没有抛出异常，子类覆盖父类该方法时也不可抛出异常。此时子类产生该异常，只能捕获处理，不能声明抛出。
+- 在try/catch后可以追加finally代码块，其中的代码一定会执行，通常用于资源回收。
+- 如果finally有return语句，永远返回finally中的结果，避免该情况。

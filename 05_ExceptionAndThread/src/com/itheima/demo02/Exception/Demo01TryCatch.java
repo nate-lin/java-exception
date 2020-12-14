@@ -2,6 +2,7 @@ package com.itheima.demo02.Exception;
 
 import javax.security.auth.login.FailedLoginException;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.Arrays;
 
 /**
@@ -32,11 +33,27 @@ public class Demo01TryCatch {
     public static void main(String[] args) {
         try {
             //可能产生异常的代码
-            readFile("d:\\a.txt");
+            readFile("d:\\a.tx");
         //try中抛出什么异常对象，catch就定义什么异常变量，用来接收这个异常对象
         }catch (IOException e){
         //异常的处理逻辑，异常对象之后，怎么处理异常对象
-            System.out.println("catch-传递的文件后缀不是.txt");
+            // System.out.println("catch-传递的文件后缀不是.txt");
+        /*
+            Throwable类中定义了3个异常处理的方法
+                String getMessage() 返回此throwable的简短描述
+                String toString() 返回此throwable的详细消息字符串
+                void printStackTrace() JVM打印异常对象，默认此方法，打印的异常信息是最全面的
+        */
+            //System.out.println(e.getMessage());//文件的后缀名不对
+            //System.out.println(e.toString());//java.io.IOException: 文件的后缀名不对
+           // System.out.println(e);//java.io.IOException: 文件的后缀名不对
+
+            /*
+                java.io.IOException: 文件的后缀名不对
+            	at com.itheima.demo02.Exception.Demo01TryCatch.readFile(Demo01TryCatch.java:62)
+            	at com.itheima.demo02.Exception.Demo01TryCatch.main(Demo01TryCatch.java:36)
+             */
+            e.printStackTrace();
         }
         System.out.println("后续代码");
     }
