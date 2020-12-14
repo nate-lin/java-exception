@@ -49,16 +49,16 @@ public class Demo05Throws {
        FailedLoginException 是编译异常，抛出了编译异常，就必须处理这个异常
        可以使用throws继续声明抛出FailedLoginException这个异常对象，让方法的调用者处理
      */
-    private static void readFile(String fileName) throws FailedLoginException ,IOException{
+    public static void readFile(String fileName) throws FailedLoginException ,IOException{
 
-        if (!fileName.equals("c:\\a.txt")){
+        if (!fileName.equals("d:\\a.txt")){
             throw new FailedLoginException("传递的文件路径不是c:\\a.txt");
         }
         /*
             如果传递的路径不是txt结尾
             那么我们就抛出IO异常对象，告知方法的调用者，文件的后缀名不对
          */
-        if (!fileName.equals(".txt")){
+        if (!fileName.endsWith(".txt")){
             throw new IOException("文件的后缀名不对");
         }
 
