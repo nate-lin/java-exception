@@ -35,7 +35,7 @@ class Zi extends Fu{
     //此时子类产生该异常，只能捕获处理，不能声明抛出
     public void show04(){
         try{
-          throw new Exception("");
+          throw new Exception("编译期异常");
     }catch(Exception e){
         e.printStackTrace();
     }
